@@ -14,25 +14,24 @@ import org.testcontainers.lifecycle.Startables;
 @ContextConfiguration(initializers = AbstractIntegrationTest.Initializer.class)
 public class AbstractIntegrationTest {
 
-	static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-		static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.4.0");
+	public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+		public static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0.29");
 
 		private static void startContainers() {
 			Startables.deepStart(Stream.of(mysql)).join();
 		}
 
-		@SuppressWarnings({ "unchecked", "rawtypes" })
 		@Override
 		public void initialize(ConfigurableApplicationContext applicationContext) {
 			// TODO Auto-generated method stub
 			startContainers();
 			ConfigurableEnvironment configurableEnvironment = applicationContext.getEnvironment();
-			MapPropertySource testcontainers = new MapPropertySource("testcontainers",
-					(Map) createConnectionConfiguration());
-			configurableEnvironment.getPropertySources().addFirst(testcontainers);
+			MapPropertySource mapPropertySource = new MapPropertySource("mapPropertySource",
+					createConnectionConfiguration());
+			configurableEnvironment.getPropertySources().addFirst(mapPropertySource);
 		}
 
-		private static Map<String, String> createConnectionConfiguration() {
+		private static Map<String, Object> createConnectionConfiguration() {
 			// TODO Auto-generated method stub
 			return Map.of("spring.datasource.url", mysql.getJdbcUrl(), "spring.datasource.username",
 					mysql.getUsername(), "spring.datasource.password", mysql.getPassword());
