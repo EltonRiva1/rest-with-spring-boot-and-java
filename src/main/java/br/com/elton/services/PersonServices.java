@@ -10,11 +10,9 @@ import org.springframework.stereotype.Service;
 
 import br.com.elton.controllers.PersonController;
 import br.com.elton.data.vo.v1.PersonVO;
-import br.com.elton.data.vo.v2.PersonVOV2;
 import br.com.elton.exceptions.RequiredObjectIsNullException;
 import br.com.elton.exceptions.ResourceNotFoundException;
 import br.com.elton.mapper.DozerMapper;
-import br.com.elton.mapper.custom.PersonMapper;
 import br.com.elton.model.Person;
 import br.com.elton.repositories.PersonRepository;
 
@@ -23,8 +21,6 @@ public class PersonServices {
 	private Logger logger = Logger.getLogger(PersonServices.class.getName());
 	@Autowired
 	private PersonRepository personRepository;
-	@Autowired
-	private PersonMapper mapper;
 
 	public PersonVO findById(Long id) {
 		this.logger.info("Finding one person!");
@@ -68,11 +64,5 @@ public class PersonServices {
 		this.logger.info("Deleting one person!");
 		this.personRepository.delete(this.personRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!")));
-	}
-
-	public PersonVOV2 createV2(PersonVOV2 personVOV2) {
-		// TODO Auto-generated method stub
-		this.logger.info("Creating one person with V2!");
-		return this.mapper.convertEntityToVO(this.personRepository.save(this.mapper.convertVOToEntity(personVOV2)));
 	}
 }

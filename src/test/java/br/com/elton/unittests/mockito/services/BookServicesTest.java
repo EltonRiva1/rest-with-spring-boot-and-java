@@ -21,7 +21,7 @@ import br.com.elton.exceptions.RequiredObjectIsNullException;
 import br.com.elton.model.Book;
 import br.com.elton.repositories.BookRepository;
 import br.com.elton.services.BookServices;
-import br.com.elton.unittests.mapper.mock.MockBook;
+import br.com.elton.unittests.mapper.mocks.MockBook;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)

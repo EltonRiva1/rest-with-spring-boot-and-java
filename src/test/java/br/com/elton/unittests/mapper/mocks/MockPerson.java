@@ -1,4 +1,4 @@
-package br.com.elton.unittests.mapper.mock;
+package br.com.elton.unittests.mapper.mocks;
 
 import java.util.ArrayList;
 import java.util.List;

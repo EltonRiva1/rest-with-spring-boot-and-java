@@ -21,7 +21,7 @@ import br.com.elton.exceptions.RequiredObjectIsNullException;
 import br.com.elton.model.Person;
 import br.com.elton.repositories.PersonRepository;
 import br.com.elton.services.PersonServices;
-import br.com.elton.unittests.mapper.mock.MockPerson;
+import br.com.elton.unittests.mapper.mocks.MockPerson;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)

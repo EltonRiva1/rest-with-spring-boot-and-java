@@ -10,11 +10,9 @@ import org.springframework.stereotype.Service;
 
 import br.com.elton.controllers.BookController;
 import br.com.elton.data.vo.v1.BookVO;
-import br.com.elton.data.vo.v2.BookVOV2;
 import br.com.elton.exceptions.RequiredObjectIsNullException;
 import br.com.elton.exceptions.ResourceNotFoundException;
 import br.com.elton.mapper.DozerMapper;
-import br.com.elton.mapper.custom.BookMapper;
 import br.com.elton.model.Book;
 import br.com.elton.repositories.BookRepository;
 
@@ -23,8 +21,6 @@ public class BookServices {
 	private Logger logger = Logger.getLogger(BookServices.class.getName());
 	@Autowired
 	private BookRepository bookRepository;
-	@Autowired
-	private BookMapper mapper;
 
 	public BookVO findById(Long id) {
 		this.logger.info("Finding one book!");
@@ -67,11 +63,5 @@ public class BookServices {
 		this.logger.info("Deleting one book!");
 		this.bookRepository.delete(this.bookRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!")));
-	}
-
-	public BookVOV2 createV2(BookVOV2 bookVOV2) {
-		// TODO Auto-generated method stub
-		this.logger.info("Creating one book with V2!");
-		return this.mapper.convertEntityToVO(this.bookRepository.save(this.mapper.convertVOToEntity(bookVOV2)));
 	}
 }

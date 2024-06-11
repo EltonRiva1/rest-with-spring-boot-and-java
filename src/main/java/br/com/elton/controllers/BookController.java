@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.elton.data.vo.v1.BookVO;
-import br.com.elton.data.vo.v2.BookVOV2;
 import br.com.elton.services.BookServices;
 import br.com.elton.util.MediaType;
 import io.swagger.v3.oas.annotations.Operation;
@@ -93,18 +92,5 @@ public class BookController {
 	public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
 		this.bookServices.delete(id);
 		return ResponseEntity.noContent().build();
-	}
-
-	@PostMapping(value = "/v2", produces = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,
-			MediaType.APPLICATION_YML }, consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML,
-					MediaType.APPLICATION_YML })
-	@Operation(summary = "Adds a new Book", description = "Adds a new Book by passing in a JSON, XML or YML representation of the book!", tags = {
-			"Books" }, responses = {
-					@ApiResponse(description = "Success", responseCode = "200", content = @Content(schema = @Schema(implementation = BookVOV2.class))),
-					@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-					@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-					@ApiResponse(description = "Internal Error", responseCode = "500", content = @Content) })
-	public BookVOV2 createV2(@RequestBody BookVOV2 bookVOV2) {
-		return this.bookServices.createV2(bookVOV2);
 	}
 }
