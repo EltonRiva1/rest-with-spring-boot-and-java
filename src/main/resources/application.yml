@@ -15,3 +15,5 @@ springdoc:
   pathsToMatch: /api/**/v1/**
   swagger-ui:
     use-root-path: true
+cors:
+  originPatterns: http://localhost:8080,https://erudio.com.br,http://localhost:3000
