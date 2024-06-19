@@ -17,3 +17,8 @@ springdoc:
     use-root-path: true
 cors:
   originPatterns: http://localhost:8080,https://erudio.com.br,http://localhost:3000
+security:
+  jwt:
+    token:
+      secret-key: 53cr37
+      expire-length: 3600000
