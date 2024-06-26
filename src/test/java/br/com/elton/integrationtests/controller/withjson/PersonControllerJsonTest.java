@@ -14,7 +14,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.elton.configs.TestConfigs;
 import br.com.elton.integrationtests.testcontainers.AbstractIntegrationTest;
+import br.com.elton.integrationtests.vo.AccountCredentialsVO;
 import br.com.elton.integrationtests.vo.PersonVO;
+import br.com.elton.integrationtests.vo.TokenVO;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -40,12 +42,9 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	@Order(1)
 	public void testCreate() throws JsonMappingException, JsonProcessingException {
 		mockPerson();
-		specification = new RequestSpecBuilder().addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ELTON)
-				.setBasePath("/api/person/v1").setPort(TestConfigs.SERVER_PORT)
-				.addFilter(new RequestLoggingFilter(LogDetail.ALL)).addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-				.build();
-		var content = RestAssured.given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_JSON).body(person)
-				.when().post().then().statusCode(200).extract().body().asString();
+		var content = RestAssured.given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ELTON).body(person).when().post().then()
+				.statusCode(200).extract().body().asString();
 		PersonVO persistedPerson = objectMapper.readValue(content, PersonVO.class);
 		person = persistedPerson;
 		Assertions.assertNotNull(persistedPerson);
@@ -65,12 +64,9 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	@Order(2)
 	public void testCreateWithWrongOrigin() throws JsonMappingException, JsonProcessingException {
 		mockPerson();
-		specification = new RequestSpecBuilder().addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_SEMERU)
-				.setBasePath("/api/person/v1").setPort(TestConfigs.SERVER_PORT)
-				.addFilter(new RequestLoggingFilter(LogDetail.ALL)).addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-				.build();
-		var content = RestAssured.given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_JSON).body(person)
-				.when().post().then().statusCode(403).extract().body().asString();
+		var content = RestAssured.given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_SEMERU).body(person).when().post().then()
+				.statusCode(403).extract().body().asString();
 		Assertions.assertNotNull(content);
 		Assertions.assertEquals("Invalid CORS request", content);
 	}
@@ -79,12 +75,9 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	@Order(3)
 	public void testFindById() throws JsonMappingException, JsonProcessingException {
 		mockPerson();
-		specification = new RequestSpecBuilder().addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ELTON)
-				.setBasePath("/api/person/v1").setPort(TestConfigs.SERVER_PORT)
-				.addFilter(new RequestLoggingFilter(LogDetail.ALL)).addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-				.build();
 		var content = RestAssured.given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_JSON)
-				.pathParam("id", person.getId()).when().get("{id}").then().statusCode(200).extract().body().asString();
+				.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ELTON).pathParam("id", person.getId())
+				.when().get("{id}").then().statusCode(200).extract().body().asString();
 		PersonVO persistedPerson = objectMapper.readValue(content, PersonVO.class);
 		person = persistedPerson;
 		Assertions.assertNotNull(persistedPerson);
@@ -104,12 +97,9 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 	@Order(4)
 	public void testFindByIdWithWrongOrigin() throws JsonMappingException, JsonProcessingException {
 		mockPerson();
-		specification = new RequestSpecBuilder().addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_SEMERU)
-				.setBasePath("/api/person/v1").setPort(TestConfigs.SERVER_PORT)
-				.addFilter(new RequestLoggingFilter(LogDetail.ALL)).addFilter(new ResponseLoggingFilter(LogDetail.ALL))
-				.build();
 		var content = RestAssured.given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_JSON)
-				.pathParam("id", person.getId()).when().get("{id}").then().statusCode(403).extract().body().asString();
+				.header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_SEMERU).pathParam("id", person.getId())
+				.when().get("{id}").then().statusCode(403).extract().body().asString();
 		Assertions.assertNotNull(content);
 		Assertions.assertEquals("Invalid CORS request", content);
 	}
@@ -119,5 +109,19 @@ public class PersonControllerJsonTest extends AbstractIntegrationTest {
 		person.setLastName("Stallman");
 		person.setAddress("New York City, New York, US");
 		person.setGender("Male");
+	}
+
+	@Test
+	@Order(0)
+	public void authorization() throws JsonMappingException, JsonProcessingException {
+		AccountCredentialsVO accountCredentialsVO = new AccountCredentialsVO("leandro", "coffee123");
+		var accessToken = RestAssured.given().basePath("/auth/signin").port(TestConfigs.SERVER_PORT)
+				.contentType(TestConfigs.CONTENT_TYPE_JSON).body(accountCredentialsVO).when().post().then()
+				.statusCode(200).extract().body().as(TokenVO.class).getAccessToken();
+		specification = new RequestSpecBuilder()
+				.addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + accessToken)
+				.setBasePath("/api/person/v1").setPort(TestConfigs.SERVER_PORT)
+				.addFilter(new RequestLoggingFilter(LogDetail.ALL)).addFilter(new ResponseLoggingFilter(LogDetail.ALL))
+				.build();
 	}
 }
