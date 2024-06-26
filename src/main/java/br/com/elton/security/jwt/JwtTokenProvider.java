@@ -94,4 +94,14 @@ public class JwtTokenProvider {
 			throw new InvalidJwtAuthenticationException("Expired or invalid JWT token!");
 		}
 	}
+
+	public TokenVO refreshToken(String refreshToken) {
+		if (refreshToken.contains("Bearer "))
+			refreshToken = refreshToken.substring("Bearer ".length());
+		JWTVerifier jwtVerifier = JWT.require(this.algorithm).build();
+		DecodedJWT decodedJWT = jwtVerifier.verify(refreshToken);
+		String username = decodedJWT.getSubject();
+		List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
+		return this.createAccessToken(username, roles);
+	}
 }
