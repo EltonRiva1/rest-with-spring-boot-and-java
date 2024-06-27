@@ -3,6 +3,9 @@ package br.com.elton.integrationtests.vo;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class PersonVO implements Serializable {
 
 	/**

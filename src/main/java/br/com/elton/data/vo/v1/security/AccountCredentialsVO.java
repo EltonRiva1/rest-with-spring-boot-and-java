@@ -11,6 +11,9 @@ public class AccountCredentialsVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String username, password;
 
+	public AccountCredentialsVO() {
+	}
+
 	public AccountCredentialsVO(String username, String password) {
 		this.username = username;
 		this.password = password;

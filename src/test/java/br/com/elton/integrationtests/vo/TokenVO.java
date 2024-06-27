@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+
+@XmlRootElement
 public class TokenVO implements Serializable {
 
 	/**
