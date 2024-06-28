@@ -21,7 +21,7 @@ public class RestWithSpringBootAndJavaApplication {
 		map.put("pbkdf2", pbkdf2Encoder);
 		DelegatingPasswordEncoder delegatingPasswordEncoder = new DelegatingPasswordEncoder("pbkdf2", map);
 		delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(pbkdf2Encoder);
-		String result1 = delegatingPasswordEncoder.encode("coffee123");
+		String result1 = delegatingPasswordEncoder.encode("admin123");
 		String result2 = delegatingPasswordEncoder.encode("admin234");
 		System.out.println("My hash result1 " + result1);
 		System.out.println("My hash result2 " + result2);

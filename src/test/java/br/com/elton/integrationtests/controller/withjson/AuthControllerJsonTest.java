@@ -24,7 +24,7 @@ public class AuthControllerJsonTest extends AbstractIntegrationTest {
 	@Test
 	@Order(1)
 	public void testSignin() throws JsonMappingException, JsonProcessingException {
-		AccountCredentialsVO accountCredentialsVO = new AccountCredentialsVO("leandro", "coffee123");
+		AccountCredentialsVO accountCredentialsVO = new AccountCredentialsVO("leandro", "admin123");
 		tokenVO = RestAssured.given().basePath("/auth/signin").port(TestConfigs.SERVER_PORT)
 				.contentType(TestConfigs.CONTENT_TYPE_JSON).body(accountCredentialsVO).when().post().then()
 				.statusCode(200).extract().body().as(TokenVO.class);

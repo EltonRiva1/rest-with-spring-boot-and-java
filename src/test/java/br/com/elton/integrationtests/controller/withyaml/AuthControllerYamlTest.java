@@ -40,7 +40,7 @@ public class AuthControllerYamlTest extends AbstractIntegrationTest {
 	@Test
 	@Order(1)
 	public void testSignin() throws JsonMappingException, JsonProcessingException {
-		AccountCredentialsVO accountCredentialsVO = new AccountCredentialsVO("leandro", "coffee123");
+		AccountCredentialsVO accountCredentialsVO = new AccountCredentialsVO("leandro", "admin123");
 		RequestSpecification specification = new RequestSpecBuilder().addFilter(new RequestLoggingFilter(LogDetail.ALL))
 				.addFilter(new ResponseLoggingFilter(LogDetail.ALL)).build();
 		tokenVO = RestAssured.given().spec(specification)
