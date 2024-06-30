@@ -125,4 +125,11 @@ public class PersonControllerCorsJsonTest extends AbstractIntegrationTest {
 				.addFilter(new RequestLoggingFilter(LogDetail.ALL)).addFilter(new ResponseLoggingFilter(LogDetail.ALL))
 				.build();
 	}
+
+	@Test
+	@Order(5)
+	public void testDelete() throws JsonMappingException, JsonProcessingException {
+		RestAssured.given().spec(specification).contentType(TestConfigs.CONTENT_TYPE_JSON)
+				.pathParam("id", person.getId()).when().delete("{id}").then().statusCode(204);
+	}
 }

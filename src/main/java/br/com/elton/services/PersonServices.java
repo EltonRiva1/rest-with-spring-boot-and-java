@@ -1,9 +1,13 @@
 package br.com.elton.services;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import org.springframework.stereotype.Service;
@@ -22,6 +26,8 @@ public class PersonServices {
 	private Logger logger = Logger.getLogger(PersonServices.class.getName());
 	@Autowired
 	private PersonRepository personRepository;
+	@Autowired
+	private PagedResourcesAssembler<PersonVO> assembler;
 
 	public PersonVO findById(Long id) {
 		this.logger.info("Finding one person!");
@@ -31,12 +37,15 @@ public class PersonServices {
 				.withSelfRel());
 	}
 
-	public List<PersonVO> findAll() {
+	public PagedModel<EntityModel<PersonVO>> findAll(Pageable pageable) {
 		this.logger.info("Finding all people!");
-		var personVOs = DozerMapper.parseListObjects(this.personRepository.findAll(), PersonVO.class);
-		personVOs.stream().forEach(p -> p.add(WebMvcLinkBuilder
+		var personPage = this.personRepository.findAll(pageable);
+		var personVosPage = personPage.map(p -> DozerMapper.parseObject(p, PersonVO.class));
+		personVosPage.map(p -> p.add(WebMvcLinkBuilder
 				.linkTo(WebMvcLinkBuilder.methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
-		return personVOs;
+		Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PersonController.class)
+				.findAll(pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+		return this.assembler.toModel(personVosPage, link);
 	}
 
 	public PersonVO create(PersonVO personVO) {
@@ -78,5 +87,16 @@ public class PersonServices {
 				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!")), PersonVO.class);
 		return personVO.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PersonController.class).findById(id))
 				.withSelfRel());
+	}
+
+	public PagedModel<EntityModel<PersonVO>> findPersonByName(String firstName, Pageable pageable) {
+		this.logger.info("Finding all people!");
+		var personPage = this.personRepository.findPersonsByName(firstName, pageable);
+		var personVosPage = personPage.map(p -> DozerMapper.parseObject(p, PersonVO.class));
+		personVosPage.map(p -> p.add(WebMvcLinkBuilder
+				.linkTo(WebMvcLinkBuilder.methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
+		Link link = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PersonController.class)
+				.findAll(pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+		return this.assembler.toModel(personVosPage, link);
 	}
 }

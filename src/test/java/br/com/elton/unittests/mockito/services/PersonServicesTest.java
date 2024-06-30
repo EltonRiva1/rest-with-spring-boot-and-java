@@ -3,7 +3,6 @@ package br.com.elton.unittests.mockito.services;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -52,42 +51,6 @@ class PersonServicesTest {
 		assertEquals("First Name Test1", personVO.getFirstName());
 		assertEquals("Last Name Test1", personVO.getLastName());
 		assertEquals("Female", personVO.getGender());
-	}
-
-	@Test
-	public void testFindAll() {
-		List<Person> persons = this.mockPerson.mockEntityList();
-		when(this.personRepository.findAll()).thenReturn(persons);
-		var personVOs = this.personServices.findAll();
-		assertNotNull(personVOs);
-		assertEquals(14, personVOs.size());
-		var personVOOne = personVOs.get(1);
-		assertNotNull(personVOOne);
-		assertNotNull(personVOOne.getKey());
-		assertNotNull(personVOOne.getLinks());
-		assertTrue(personVOOne.toString().contains("links: [</api/person/v1/1>;rel=\"self\"]"));
-		assertEquals("Address Test1", personVOOne.getAddress());
-		assertEquals("First Name Test1", personVOOne.getFirstName());
-		assertEquals("Last Name Test1", personVOOne.getLastName());
-		assertEquals("Female", personVOOne.getGender());
-		var personVOFour = personVOs.get(4);
-		assertNotNull(personVOFour);
-		assertNotNull(personVOFour.getKey());
-		assertNotNull(personVOFour.getLinks());
-		assertTrue(personVOFour.toString().contains("links: [</api/person/v1/4>;rel=\"self\"]"));
-		assertEquals("Address Test4", personVOFour.getAddress());
-		assertEquals("First Name Test4", personVOFour.getFirstName());
-		assertEquals("Last Name Test4", personVOFour.getLastName());
-		assertEquals("Male", personVOFour.getGender());
-		var personVOSeven = personVOs.get(7);
-		assertNotNull(personVOSeven);
-		assertNotNull(personVOSeven.getKey());
-		assertNotNull(personVOSeven.getLinks());
-		assertTrue(personVOSeven.toString().contains("links: [</api/person/v1/7>;rel=\"self\"]"));
-		assertEquals("Address Test7", personVOSeven.getAddress());
-		assertEquals("First Name Test7", personVOSeven.getFirstName());
-		assertEquals("Last Name Test7", personVOSeven.getLastName());
-		assertEquals("Female", personVOSeven.getGender());
 	}
 
 	@Test
