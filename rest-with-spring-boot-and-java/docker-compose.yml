@@ -4,7 +4,6 @@ services:
   db:
     image: mysql:8.0.29
     command: mysqld --default-authentication-plugin=mysql_native_password
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: rest_with_spring_boot
@@ -19,7 +18,6 @@ services:
       - elton-network
   rest-with-spring-boot:
     image: notleamil/rest-with-spring-boot-and-java
-    restart: always
     build: ./rest-with-spring-boot-and-java
     working_dir: /rest-with-spring-boot-and-java
     environment:
