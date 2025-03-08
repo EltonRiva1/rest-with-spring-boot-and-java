@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.7</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<version>3.2.12</version>
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.elton</groupId>
 	<artifactId>rest-with-spring-boot-and-java</artifactId>
@@ -20,7 +21,7 @@
 		<testcontainers.version>1.16.3</testcontainers.version>
 		<rest-assured.version>4.5.0</rest-assured.version>
 		<java-jwt.version>3.18.3</java-jwt.version>
-		
+
 	</properties>
 	<dependencies>
 		<dependency>
@@ -123,7 +124,8 @@
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-maven-plugin</artifactId>
 				<configuration>
-					<url>jdbc:mysql://localhost:3306/rest_with_spring_boot?useTimezone=true&amp;serverTimezone=UTC&amp;useSSL=false</url>
+					<url>
+						jdbc:mysql://localhost:3306/rest_with_spring_boot?useTimezone=true&amp;serverTimezone=UTC&amp;useSSL=false</url>
 					<user>root</user>
 					<password>root</password>
 				</configuration>
